@@ -481,7 +481,7 @@ btn_col1, btn_col2, btn_col3, spacer = st.columns([1.1, 1.1, 1.3, 4.5])
 with btn_col1:
     submit_clicked = st.button("⚡  Submit", type="primary", width='stretch')
 with btn_col2:
-    analyze_clicked = st.button("📊  Analyze", type="secondary", width='stretch')
+    analyze_clicked = st.button("Analyze", type="secondary", width='stretch')
 
 # ---------------------------------------------------------------------------
 # Submit logic
