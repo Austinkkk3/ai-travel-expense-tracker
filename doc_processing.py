@@ -147,9 +147,14 @@ _PROMPT_MAP = {
 def _detect_doc_type(filename: str) -> str:
     """Detect document type from filename heuristics. Defaults to hotel."""
     name = filename.lower()
+    # Check hotel FIRST so "hotel_receipt_*.pdf" isn't mistaken for a meal
+    if any(k in name for k in ["hotel", "inn", "marriott", "hilton", "hyatt", "sheraton",
+                                "westin", "fairmont", "intercontinental", "resort", "lodge", "motel"]):
+        return "hotel"
     if any(k in name for k in ["flight", "air", "airline", "ticket", "boarding", "itinerary"]):
         return "flight"
-    if any(k in name for k in ["meal", "restaurant", "food", "lunch", "dinner", "breakfast", "cafe", "receipt"]):
+    # "receipt" removed — it's a generic word that applies to all doc types
+    if any(k in name for k in ["meal", "restaurant", "food", "lunch", "dinner", "breakfast", "cafe"]):
         return "meal"
     if any(k in name for k in ["car", "rental", "rent", "enterprise", "hertz", "avis", "budget", "vehicle"]):
         return "car"
