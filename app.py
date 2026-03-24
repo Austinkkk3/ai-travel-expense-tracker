@@ -370,18 +370,26 @@ def _search_astra(query: str, top_k: int = 5) -> list[str]:
 
 
 def _ask_ai(question: str, session_id: str) -> str:
-    """Answer a question using Astra DB receipt context + watsonx.ai Granite."""
+    """Answer a question using extracted expense data + watsonx.ai Granite."""
     from model_gateway import invoke_llm
-    chunks = _search_astra(question, top_k=6)
-    context = "\n\n---\n\n".join(chunks) if chunks else "No receipts uploaded yet."
-    prompt = f"""You are an AI travel expense assistant. Use the receipt data below to answer the user's question accurately.
 
-Receipt Data:
+    # Use the already-extracted DataFrame as context — it has ALL line items
+    df = st.session_state.get("invoice_df")
+    if df is not None and not df.empty:
+        context = df.to_string(index=False)
+    else:
+        # Fallback: try Astra DB chunks if no DataFrame in session
+        chunks = _search_astra(question, top_k=20)
+        context = "\n\n---\n\n".join(chunks) if chunks else "No receipts uploaded yet."
+
+    prompt = f"""You are an AI travel expense assistant. Use the structured expense table below to answer the user's question accurately.
+
+Extracted Expense Data:
 {context}
 
 User Question: {question}
 
-Answer concisely based only on the receipt data provided."""
+Answer concisely based only on the expense data provided. When summing amounts, add up all relevant rows."""
     try:
         return invoke_llm(prompt)
     except Exception as e:
