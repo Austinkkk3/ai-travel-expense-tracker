@@ -33,9 +33,16 @@ def upload_files_to_astra(uploaded_files) -> int:
 
     Returns the total number of chunks uploaded.
     """
-    from docling.document_converter import DocumentConverter
+    from docling.document_converter import DocumentConverter, PdfFormatOption
+    from docling.datamodel.pipeline_options import PdfPipelineOptions
+    from docling.datamodel.base_models import InputFormat
 
-    converter  = DocumentConverter()
+    opts = PdfPipelineOptions()
+    opts.do_ocr = False
+    opts.do_table_structure = True
+    converter = DocumentConverter(
+        format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=opts)}
+    )
     collection = _get_collection()
     total      = 0
 

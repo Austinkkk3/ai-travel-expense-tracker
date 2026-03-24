@@ -14,7 +14,17 @@ import os
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from docling.document_converter import DocumentConverter
+from docling.document_converter import DocumentConverter, PdfFormatOption
+from docling.datamodel.pipeline_options import PdfPipelineOptions
+from docling.datamodel.base_models import InputFormat
+
+def _make_converter():
+    opts = PdfPipelineOptions()
+    opts.do_ocr = False          # no OCR model download needed
+    opts.do_table_structure = True
+    return DocumentConverter(
+        format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=opts)}
+    )
 
 from model_gateway import invoke_llm
 
@@ -154,7 +164,7 @@ def _pdf_to_markdown(pdf_bytes: bytes) -> str:
         tmp_path = tmp.name
 
     try:
-        converter = DocumentConverter()
+        converter = _make_converter()
         result = converter.convert(tmp_path)
         return result.document.export_to_markdown()
     finally:
