@@ -376,33 +376,58 @@ def _ask_ai(question: str, session_id: str) -> str:
     # Use the already-extracted DataFrame as context — it has ALL line items
     df = st.session_state.get("invoice_df")
     if df is not None and not df.empty:
-        context = df.to_string(index=False)
+        # Pre-compute aggregations in Python so the LLM only needs to read, not calculate
+        by_category = (
+            df.groupby("Category")["Amount"].sum()
+            .sort_values()
+            .reset_index()
+            .rename(columns={"Amount": "Total"})
+        )
+        by_vendor = (
+            df.groupby("Vendor")["Amount"].sum()
+            .sort_values(ascending=False)
+            .reset_index()
+            .rename(columns={"Amount": "Total"})
+        )
+        by_doctype = (
+            df.groupby("Doc Type")["Amount"].sum()
+            .sort_values(ascending=False)
+            .reset_index()
+            .rename(columns={"Amount": "Total"})
+        )
+        context = f"""--- All Expense Line Items ---
+{df.to_string(index=False)}
+
+--- Total Spent by Category (sorted lowest to highest) ---
+{by_category.to_string(index=False)}
+
+--- Total Spent by Vendor (sorted highest to lowest) ---
+{by_vendor.to_string(index=False)}
+
+--- Total Spent by Document Type ---
+{by_doctype.to_string(index=False)}
+
+--- Overall Total: {df['Amount'].sum():.2f} across {len(df)} line items ---"""
     else:
         # Fallback: try Astra DB chunks if no DataFrame in session
         chunks = _search_astra(question, top_k=20)
         context = "\n\n---\n\n".join(chunks) if chunks else "No receipts uploaded yet."
 
-    prompt = f"""You are an AI travel expense assistant. Use the structured expense table below to answer the user's question accurately.
+    prompt = f"""You are an AI travel expense assistant. Use the expense data and pre-computed totals below to answer accurately.
 
-The table has these columns:
+Column definitions:
 - Date: date of the expense
 - Vendor: hotel, airline, restaurant, or rental company name
 - Doc Type: Hotel, Flight, Meal, or Car Rental
-- Category: expense category (e.g. Room, Food & Beverage, Parking, Taxes & Fees, Airfare, Breakfast, Dinner, etc.)
-- Description: original line item text from the receipt
-- Currency: 3-letter currency code (CAD, USD, etc.)
+- Category: expense category (Room, Food & Beverage, Parking, Taxes & Fees, Airfare, etc.)
+- Currency: 3-letter code (CAD, USD, etc.)
 - Amount: numeric expense amount
-- Confidence: extraction confidence score
 
-Extracted Expense Data:
 {context}
 
 User Question: {question}
 
-Instructions:
-- When the user asks about "category", refer to the Category column, not the Vendor column.
-- When asked for totals or least/most, group by the relevant column and sum the Amount.
-- Answer concisely based only on the expense data provided."""
+Answer concisely using the pre-computed totals above — do not re-calculate."""
     try:
         return invoke_llm(prompt)
     except Exception as e:
