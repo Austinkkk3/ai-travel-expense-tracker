@@ -384,12 +384,25 @@ def _ask_ai(question: str, session_id: str) -> str:
 
     prompt = f"""You are an AI travel expense assistant. Use the structured expense table below to answer the user's question accurately.
 
+The table has these columns:
+- Date: date of the expense
+- Vendor: hotel, airline, restaurant, or rental company name
+- Doc Type: Hotel, Flight, Meal, or Car Rental
+- Category: expense category (e.g. Room, Food & Beverage, Parking, Taxes & Fees, Airfare, Breakfast, Dinner, etc.)
+- Description: original line item text from the receipt
+- Currency: 3-letter currency code (CAD, USD, etc.)
+- Amount: numeric expense amount
+- Confidence: extraction confidence score
+
 Extracted Expense Data:
 {context}
 
 User Question: {question}
 
-Answer concisely based only on the expense data provided. When summing amounts, add up all relevant rows."""
+Instructions:
+- When the user asks about "category", refer to the Category column, not the Vendor column.
+- When asked for totals or least/most, group by the relevant column and sum the Amount.
+- Answer concisely based only on the expense data provided."""
     try:
         return invoke_llm(prompt)
     except Exception as e:
