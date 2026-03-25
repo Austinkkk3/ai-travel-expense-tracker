@@ -326,6 +326,15 @@ st.markdown(
         color: #1E293B !important;
     }
 
+    /* ── Chat messages ── */
+    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] span,
+    [data-testid="stChatMessage"] div,
+    [data-testid="stChatMessage"] li,
+    [data-testid="stChatMessage"] {
+        color: #1E293B !important;
+    }
+
     /* ── Dataframe ── */
     .stDataFrame { border-radius: 12px !important; overflow: hidden !important; border: 1px solid #E2E8F0 !important; }
     [data-testid="stDataFrame"] > div { border-radius: 12px !important; }
