@@ -292,6 +292,18 @@ st.markdown(
     }
 
     /* ── File uploader ── */
+    /* Browse files button — light style */
+    [data-testid="stFileUploaderDropzoneInput"] + div button,
+    [data-testid="stFileUploaderDropzone"] button {
+        background: #ffffff !important;
+        color: #2563EB !important;
+        border: 1.5px solid #BFDBFE !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button:hover {
+        background: #EFF6FF !important;
+        border-color: #93C5FD !important;
+    }
     [data-testid="stFileUploaderDropzone"] {
         border-radius: 14px !important;
         border: 2px dashed #93C5FD !important;
