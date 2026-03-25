@@ -301,6 +301,16 @@ st.markdown(
     [data-testid="stFileUploaderDropzone"]:hover {
         border-color: #3B82F6 !important;
     }
+    /* Fix: uploaded file names invisible (white on white) */
+    [data-testid="stFileUploaderDropzone"] span,
+    [data-testid="stFileUploaderDropzone"] p,
+    [data-testid="stFileUploaderDropzone"] small,
+    [data-testid="stFileUploaderFile"] span,
+    [data-testid="stFileUploaderFile"] p,
+    [data-testid="uploadedFileName"],
+    .stFileUploaderFile span {
+        color: #1E293B !important;
+    }
 
     /* ── Dataframe ── */
     .stDataFrame { border-radius: 12px !important; overflow: hidden !important; border: 1px solid #E2E8F0 !important; }
