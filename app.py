@@ -302,12 +302,15 @@ st.markdown(
         border-color: #3B82F6 !important;
     }
     /* Fix: uploaded file names invisible (white text on light bg) */
-    [data-testid="stFileUploader"] span,
+    /* Target text nodes only — exclude buttons so Browse files stays readable */
+    [data-testid="stFileUploader"] span:not(button span),
     [data-testid="stFileUploader"] p,
     [data-testid="stFileUploader"] small,
-    [data-testid="stFileUploader"] div,
-    [data-testid="stFileUploader"] label,
-    section[data-testid="stFileUploader"] * {
+    [data-testid="stFileUploader"] label {
+        color: #1E293B !important;
+    }
+    /* File list items below the dropzone */
+    [data-testid="stFileUploaderFile"] *:not(button):not(button *) {
         color: #1E293B !important;
     }
 
