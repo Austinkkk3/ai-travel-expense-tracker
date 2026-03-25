@@ -301,14 +301,13 @@ st.markdown(
     [data-testid="stFileUploaderDropzone"]:hover {
         border-color: #3B82F6 !important;
     }
-    /* Fix: uploaded file names invisible (white on white) */
-    [data-testid="stFileUploaderDropzone"] span,
-    [data-testid="stFileUploaderDropzone"] p,
-    [data-testid="stFileUploaderDropzone"] small,
-    [data-testid="stFileUploaderFile"] span,
-    [data-testid="stFileUploaderFile"] p,
-    [data-testid="uploadedFileName"],
-    .stFileUploaderFile span {
+    /* Fix: uploaded file names invisible (white text on light bg) */
+    [data-testid="stFileUploader"] span,
+    [data-testid="stFileUploader"] p,
+    [data-testid="stFileUploader"] small,
+    [data-testid="stFileUploader"] div,
+    [data-testid="stFileUploader"] label,
+    section[data-testid="stFileUploader"] * {
         color: #1E293B !important;
     }
 
