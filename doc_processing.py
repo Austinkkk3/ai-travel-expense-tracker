@@ -301,7 +301,7 @@ def analyze_invoices(df: pd.DataFrame) -> tuple:
     base_layout = dict(
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Inter, sans-serif", size=13),
+        font=dict(family="Inter, sans-serif", size=13, color="#1E293B"),
         title_font=dict(size=16, color="#1E293B"),
     )
 
@@ -327,8 +327,8 @@ def analyze_invoices(df: pd.DataFrame) -> tuple:
         **base_layout,
         margin=dict(t=55, b=40, l=40, r=20),
         showlegend=False,
-        xaxis=dict(showgrid=False),
-        yaxis=dict(gridcolor="#E2E8F0"),
+        xaxis=dict(showgrid=False, tickfont=dict(color="#1E293B"), title_font=dict(color="#1E293B")),
+        yaxis=dict(gridcolor="#E2E8F0", tickfont=dict(color="#1E293B"), title_font=dict(color="#1E293B")),
     )
 
     # ── Chart 2: Expenses by Category ────────────────────────────────────────
@@ -390,8 +390,8 @@ def analyze_invoices(df: pd.DataFrame) -> tuple:
         **base_layout,
         margin=dict(t=55, b=40, l=40, r=20),
         showlegend=False,
-        xaxis=dict(showgrid=False),
-        yaxis=dict(gridcolor="#E2E8F0"),
+        xaxis=dict(showgrid=False, tickfont=dict(color="#1E293B"), title_font=dict(color="#1E293B")),
+        yaxis=dict(gridcolor="#E2E8F0", tickfont=dict(color="#1E293B"), title_font=dict(color="#1E293B")),
     )
 
     return fig_vendor, fig_category, fig_doctype
